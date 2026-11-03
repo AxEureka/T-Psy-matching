@@ -413,7 +413,7 @@ function openProjectDetail(projectId) {
 
   $("project-detail-message").textContent = "";
 
-     // ------------------------------------
+   // ------------------------------------
   // 研究状態ごとのボタン表示
   // ------------------------------------
 
@@ -446,6 +446,16 @@ function openProjectDetail(projectId) {
     "hidden",
     !["draft", "paused"].includes(projectStatus)
   );
+
+  $("research-list-panel").classList.add("hidden");
+  $("research-form-panel").classList.add("hidden");
+  $("research-detail-panel").classList.remove("hidden");
+
+  $("research-detail-panel").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+}
   
 // ------------------------------------
 // 募集状態の更新
