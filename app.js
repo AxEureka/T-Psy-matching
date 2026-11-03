@@ -13,6 +13,7 @@ const supabaseClient = window.supabaseClient;
 let currentUser = null;
 let currentProjects = [];
 let selectedProject = null;
+let selectedDeletedProject = null;
 let editingProjectId = null;
 
 // ------------------------------------
