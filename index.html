@@ -134,18 +134,115 @@
           <span>募集を作成・管理する</span>
         </button>
       </div>
+      
       <section class="dashboard-preview hidden" id="view-panel">
+
+        <!-- 共通ヘッダー -->
         <div class="panel-heading">
           <div>
             <p class="eyebrow" id="view-eyebrow">MENU</p>
             <h2 id="view-title">メニュー</h2>
           </div>
-          <button class="text-button" id="back-to-menu" type="button">メニューに戻る</button>
+          <button class="text-button" id="back-to-menu" type="button">
+            メニューに戻る
+          </button>
         </div>
-        <p id="view-description"></p>
-        <div class="notice">
-          ここに次の段階で機能を追加していきます。まずは画面の動きと構成を確認しましょう。
+      
+        <!-- 研究者メニュー -->
+        <div id="researcher-dashboard" class="hidden">
+      
+          <div class="panel-heading">
+            <div>
+              <h3>作成した研究</h3>
+              <p>準備中・募集中・募集終了の研究を管理できます。</p>
+            </div>
+            <button class="button primary compact" id="new-project-button" type="button">
+              ＋ 新規作成
+            </button>
+          </div>
+      
+          <div id="project-list" class="project-list">
+            <p class="notice">研究情報を読み込んでいます。</p>
+          </div>
+      
+          <!-- 新規作成フォーム -->
+          <div id="research-form-panel" class="sub-panel hidden">
+            <h3>新しい研究を作成</h3>
+      
+            <form id="research-form" class="form">
+      
+              <label for="project-title">研究タイトル</label>
+              <input id="project-title" type="text" maxlength="200" required>
+      
+              <label for="project-summary">研究の概要</label>
+              <textarea id="project-summary" rows="4"
+                placeholder="研究内容を簡単に説明してください"></textarea>
+      
+              <label for="project-target">募集対象</label>
+              <input id="project-target" type="text"
+                placeholder="例：大学生、18歳以上の方">
+      
+              <label for="project-method">募集方式</label>
+              <select id="project-method">
+                <option value="external_form">外部フォーム方式</option>
+                <option value="appointment">日時予約方式</option>
+              </select>
+      
+              <label for="project-start">募集開始日（予定）</label>
+              <input id="project-start" type="date">
+      
+              <label for="project-end">募集終了日（予定）</label>
+              <input id="project-end" type="date">
+      
+              <label for="project-url">外部フォームURL</label>
+              <input id="project-url" type="url"
+                placeholder="https://...">
+      
+              <p class="small-note">
+                保存した研究は「準備中」として登録されます。
+                募集開始操作を行うまでは参加者には公開されません。
+              </p>
+      
+              <p id="research-form-message" class="form-message"
+                role="status"></p>
+      
+              <div class="form-actions">
+                <button class="button secondary" id="cancel-project-form"
+                  type="button">キャンセル</button>
+                <button class="button primary" type="submit">保存する</button>
+              </div>
+      
+            </form>
+          </div>
+      
+          <!-- 研究詳細 -->
+          <div id="research-detail-panel" class="sub-panel hidden">
+            <button class="text-button" id="back-to-project-list" type="button">
+              ← 研究一覧に戻る
+            </button>
+      
+            <div id="project-detail-content"></div>
+      
+            <div class="detail-actions">
+              <button class="button primary" id="start-project-button"
+                type="button">募集開始</button>
+              <button class="button secondary" id="close-project-button"
+                type="button">募集終了</button>
+            </div>
+      
+            <p id="project-detail-message" class="form-message"
+              role="status"></p>
+          </div>
+      
         </div>
+      
+        <!-- 参加者メニュー：今回は仮表示 -->
+        <div id="participant-dashboard" class="hidden">
+          <p class="notice">
+            参加者向けの募集一覧・予約機能は次の段階で追加します。
+          </p>
+        </div>
+      
       </section>
     </section>
   </main>
