@@ -440,9 +440,10 @@ function openProjectDetail(projectId) {
     !["recruiting", "paused"].includes(selectedProject.status)
   );
 
+  $("research-list-panel").classList.add("hidden");
   $("research-form-panel").classList.add("hidden");
   $("research-detail-panel").classList.remove("hidden");
-
+  
   $("research-detail-panel").scrollIntoView({
     behavior: "smooth",
     block: "start"
