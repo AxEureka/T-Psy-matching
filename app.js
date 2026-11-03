@@ -166,7 +166,7 @@ document.querySelectorAll("[data-view]").forEach((button) => {
     viewPanel.classList.remove("hidden");
 
     if (isResearcher) {
-      await rojects();
+      await loadProjects();
     }
 
     viewPanel.scrollIntoView({
