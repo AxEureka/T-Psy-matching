@@ -166,7 +166,7 @@ document.querySelectorAll("[data-view]").forEach((button) => {
     viewPanel.classList.remove("hidden");
 
     if (isResearcher) {
-      await loadProjects();
+      await rojects();
     }
 
     viewPanel.scrollIntoView({
@@ -202,6 +202,7 @@ async function loadProjects() {
     .from("research_projects")
     .select("*")
     .eq("owner_id", currentUser.id)
+    .is("deleted_at", null)
     .order("created_at", { ascending: false });
 
   if (error) {
@@ -644,6 +645,58 @@ $("close-project-button").addEventListener("click", () => {
   if (!confirmed) return;
 
   updateProjectStatus("closed");
+}); 
+
+// ------------------------------------
+// 研究の論理削除
+// ------------------------------------
+
+$("delete-project-button").addEventListener("click", async () => {
+  if (!selectedProject) return;
+
+  const projectId = selectedProject.id;
+  const projectTitle = selectedProject.title;
+
+  const confirmed = confirm(
+    `「${projectTitle}」を削除しますか？\n\n` +
+    "削除した研究は通常の研究一覧から非表示になります。\n" +
+    "参加者の予約・参加履歴は保持されます。\n\n" +
+    "削除済みの研究一覧から復元することもできます。"
+  );
+
+  if (!confirmed) return;
+
+  const message = $("project-detail-message");
+  message.textContent = "削除しています...";
+
+  const { data, error } = await supabaseClient
+    .from("research_projects")
+    .update({
+      deleted_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", projectId)
+    .eq("owner_id", currentUser.id)
+    .is("deleted_at", null)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error(error);
+    message.textContent =
+      "削除できませんでした。" +
+      (error ? error.message : "研究情報を確認してください。");
+    return;
+  }
+
+  selectedProject = null;
+
+  alert("研究を削除しました。");
+
+  $("research-detail-panel").classList.add("hidden");
+  $("research-list-panel").classList.remove("hidden");
+
+  await loadProjects();
 });
 
 // ------------------------------------
