@@ -842,3 +842,60 @@ $("logout-button").addEventListener("click", async () => {
   signupForm.classList.add("hidden");
   loginForm.classList.remove("hidden");
 });
+
+// ------------------------------------
+// 削除済み研究一覧
+// ------------------------------------
+
+async function loadDeletedProjects() {
+  const { data, error } = await supabaseClient
+    .from("research_projects")
+    .select("*")
+    .eq("owner_id", currentUser.id)
+    .not("deleted_at", "is", null)
+    .order("deleted_at", { ascending: false });
+
+  const list = $("deleted-project-list");
+  list.innerHTML = "";
+
+  if (error) {
+    console.error(error);
+    list.textContent = "削除済み研究を読み込めませんでした。";
+    return;
+  }
+
+  if (!data || data.length === 0) {
+    list.textContent = "削除済みの研究はありません。";
+    return;
+  }
+
+  data.forEach((project) => {
+    const item = document.createElement("div");
+    item.className = "project-card";
+
+    const deletedDate = project.deleted_at
+      ? new Date(project.deleted_at).toLocaleString("ja-JP")
+      : "";
+
+    item.innerHTML = `
+      <h3>${escapeHTML(project.title)}</h3>
+      <p>削除日：${deletedDate}</p>
+    `;
+
+    list.appendChild(item);
+  });
+}
+
+// 削除済み研究一覧を開く
+$("show-deleted-projects-button").addEventListener("click", async () => {
+  $("research-list-panel").classList.add("hidden");
+  $("deleted-projects-panel").classList.remove("hidden");
+
+  await loadDeletedProjects();
+});
+
+// 通常の研究一覧に戻る
+$("back-to-active-projects").addEventListener("click", () => {
+  $("deleted-projects-panel").classList.add("hidden");
+  $("research-list-panel").classList.remove("hidden");
+});
