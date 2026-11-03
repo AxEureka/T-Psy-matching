@@ -845,6 +845,55 @@ $("logout-button").addEventListener("click", async () => {
 });
 
 // ------------------------------------
+// 削除済み研究の詳細画面
+// ------------------------------------
+
+function openDeletedProjectDetail(project) {
+  selectedDeletedProject = project;
+
+  const content = $("deleted-project-detail-content");
+
+  const deletedDate = project.deleted_at
+    ? new Date(project.deleted_at).toLocaleString("ja-JP")
+    : "";
+
+  content.innerHTML = "";
+
+  const title = document.createElement("h2");
+  title.textContent = project.title;
+
+  const status = document.createElement("p");
+  status.textContent = "削除済み";
+
+  const summary = document.createElement("p");
+  summary.textContent = `研究概要：${project.summary || "未設定"}`;
+
+  const target = document.createElement("p");
+  target.textContent = `募集対象：${project.target || "未設定"}`;
+
+  const method = document.createElement("p");
+  method.textContent =
+    `募集方式：${
+      project.recruitment_method === "appointment"
+        ? "日時予約方式"
+        : "外部フォーム方式"
+    }`;
+
+  const deleted = document.createElement("p");
+  deleted.textContent = `削除日：${deletedDate}`;
+
+  content.appendChild(title);
+  content.appendChild(status);
+  content.appendChild(summary);
+  content.appendChild(target);
+  content.appendChild(method);
+  content.appendChild(deleted);
+
+  $("deleted-projects-panel").classList.add("hidden");
+  $("deleted-project-detail-panel").classList.remove("hidden");
+}
+
+// ------------------------------------
 // 削除済み研究一覧
 // ------------------------------------
 
@@ -886,6 +935,13 @@ async function loadDeletedProjects() {
     
     item.appendChild(title);
     item.appendChild(date);
+    
+    item.style.cursor = "pointer";
+    
+    item.addEventListener("click", () => {
+      openDeletedProjectDetail(project);
+    });
+    
     list.appendChild(item);
   });
 }
@@ -903,4 +959,10 @@ console.log("戻るボタンの取得結果：", $("back-to-active-projects-butt
 $("back-to-active-projects-button").addEventListener("click", () => {
   $("deleted-projects-panel").classList.add("hidden");
   $("research-list-panel").classList.remove("hidden");
+});
+
+// 削除済み研究の詳細から一覧に戻る
+$("back-to-deleted-project-list").addEventListener("click", () => {
+  $("deleted-project-detail-panel").classList.add("hidden");
+  $("deleted-projects-panel").classList.remove("hidden");
 });
