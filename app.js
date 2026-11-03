@@ -898,7 +898,7 @@ $("show-deleted-projects-button").addEventListener("click", async () => {
 });
 
 // 通常の研究一覧に戻る
-$("back-to-active-projects").addEventListener("click", () => {
+$("back-to-active-projects-button").addEventListener("click", () => {
   $("deleted-projects-panel").classList.add("hidden");
   $("research-list-panel").classList.remove("hidden");
 });
