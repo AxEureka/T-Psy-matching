@@ -898,6 +898,7 @@ $("show-deleted-projects-button").addEventListener("click", async () => {
 });
 
 // 通常の研究一覧に戻る
+console.log("戻るボタンの取得結果：", $("back-to-active-projects-button"));
 $("back-to-active-projects-button").addEventListener("click", () => {
   $("deleted-projects-panel").classList.add("hidden");
   $("research-list-panel").classList.remove("hidden");
