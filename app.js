@@ -276,6 +276,7 @@ function getStatusLabel(status) {
   const labels = {
     draft: "準備中",
     recruiting: "募集中",
+    paused: "募集停止",
     closed: "募集終了"
   };
 
@@ -411,14 +412,31 @@ function openProjectDetail(projectId) {
 
   $("project-detail-message").textContent = "";
 
-  $("start-project-button").classList.toggle(
+    // 募集開始・再開ボタン
+  const startButton = $("start-project-button");
+  startButton.classList.toggle(
     "hidden",
-    selectedProject.status === "recruiting"
+    !["draft", "paused"].includes(selectedProject.status)
   );
 
+  startButton.textContent =
+    selectedProject.status === "paused"
+      ? "募集再開"
+      : "募集開始";
+
+  // 募集停止ボタン
+  const pauseButton = $("pause-project-button");
+  if (pauseButton) {
+    pauseButton.classList.toggle(
+      "hidden",
+      selectedProject.status !== "recruiting"
+    );
+  }
+
+  // 募集終了ボタン
   $("close-project-button").classList.toggle(
     "hidden",
-    selectedProject.status !== "recruiting"
+    !["recruiting", "paused"].includes(selectedProject.status)
   );
 
   $("research-form-panel").classList.add("hidden");
@@ -468,9 +486,12 @@ async function updateProjectStatus(newStatus) {
 
 // 募集開始・再開
 $("start-project-button").addEventListener("click", () => {
+  const isRestart = selectedProject?.status === "paused";
 
   const confirmed = window.confirm(
-    "この研究の募集を開始しますか？\n\n開始すると、参加者側に研究が公開されます。"
+    isRestart
+      ? "募集を再開しますか？\n\n再開すると、参加者側に研究が公開されます。"
+      : "この研究の募集を開始しますか？\n\n開始すると、参加者側に研究が公開されます。"
   );
 
   if (!confirmed) return;
@@ -478,18 +499,32 @@ $("start-project-button").addEventListener("click", () => {
   updateProjectStatus("recruiting");
 });
 
+// 募集一時停止
+// ※ボタンはindex.htmlに追加するよ
+const pauseButton = $("pause-project-button");
+
+if (pauseButton) {
+  pauseButton.addEventListener("click", () => {
+    const confirmed = window.confirm(
+      "募集を一時停止しますか？\n\n停止すると、参加者側に研究が表示されなくなります。募集再開はいつでもできます。"
+    );
+
+    if (!confirmed) return;
+
+    updateProjectStatus("paused");
+  });
+}
+
 // 募集終了
 $("close-project-button").addEventListener("click", () => {
-
   const confirmed = window.confirm(
-    "この研究の募集を終了しますか？\n\n終了すると、参加者側に表示されなくなります。"
+    "この募集を終了しますか？\n\n終了すると、この募集は再開できなくなります。再募集する場合は、新しい募集を作成します。"
   );
 
   if (!confirmed) return;
 
   updateProjectStatus("closed");
 });
-
 // ------------------------------------
 // 研究一覧に戻る
 // ------------------------------------
