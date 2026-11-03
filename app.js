@@ -291,8 +291,9 @@ $("new-project-button").addEventListener("click", () => {
   $("research-form").reset();
   $("research-form-message").textContent = "";
 
-  $("research-form-panel").classList.remove("hidden");
-  $("research-detail-panel").classList.add("hidden");
+  $("research-list-panel").classList.add("hidden");
+  $("research-form-panel").classList.add("hidden");
+  $("research-detail-panel").classList.remove("hidden");
 
   $("research-form-panel").scrollIntoView({
     behavior: "smooth",
@@ -525,12 +526,14 @@ $("close-project-button").addEventListener("click", () => {
 
   updateProjectStatus("closed");
 });
+
 // ------------------------------------
 // 研究一覧に戻る
 // ------------------------------------
 
 $("back-to-project-list").addEventListener("click", () => {
   $("research-detail-panel").classList.add("hidden");
+  $("research-list-panel").classList.remove("hidden");
 });
 
 // ------------------------------------
