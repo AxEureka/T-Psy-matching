@@ -413,49 +413,40 @@ function openProjectDetail(projectId) {
 
   $("project-detail-message").textContent = "";
 
-    // 募集開始・再開ボタン
+     // ------------------------------------
+  // 研究状態ごとのボタン表示
+  // ------------------------------------
+
+  const projectStatus = selectedProject.status;
+
+  // 募集開始・再開
   const startButton = $("start-project-button");
   startButton.classList.toggle(
     "hidden",
-    !["draft", "paused"].includes(selectedProject.status)
+    !["draft", "paused"].includes(projectStatus)
   );
 
   startButton.textContent =
-    selectedProject.status === "paused"
-      ? "募集再開"
-      : "募集開始";
+    projectStatus === "paused" ? "募集再開" : "募集開始";
 
-  // 募集停止ボタン
-  const pauseButton = $("pause-project-button");
-  if (pauseButton) {
-    pauseButton.classList.toggle(
-      "hidden",
-      selectedProject.status !== "recruiting"
-    );
-  }
+  // 募集停止
+  $("pause-project-button").classList.toggle(
+    "hidden",
+    projectStatus !== "recruiting"
+  );
 
-  // 募集終了ボタン
+  // 募集終了
   $("close-project-button").classList.toggle(
     "hidden",
-    !["recruiting", "paused"].includes(selectedProject.status)
+    !["recruiting", "paused"].includes(projectStatus)
   );
 
-  // 編集ボタン
+  // 編集
   $("edit-project-button").classList.toggle(
     "hidden",
-    !["draft", "paused"].includes(selectedProject.status)
+    !["draft", "paused"].includes(projectStatus)
   );
-
-  $("research-list-panel").classList.add("hidden");
-  $("research-form-panel").classList.add("hidden");
-  $("research-detail-panel").classList.remove("hidden");
   
-  $("research-detail-panel").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
-
 // ------------------------------------
 // 募集状態の更新
 // ------------------------------------
@@ -526,7 +517,7 @@ if (pauseButton) {
 // 募集終了
 $("close-project-button").addEventListener("click", () => {
   const confirmed = window.confirm(
-    "この募集を終了しますか？\n\n終了すると、この募集は再開できなくなります。再募集する場合は、新しい募集を作成します。"
+    "この募集を終了しますか？\n\n終了後は通常の募集再開ができなくなります。再募集する場合は、同じ研究の募集期間を延長できます。"
   );
 
   if (!confirmed) return;
