@@ -877,11 +877,14 @@ async function loadDeletedProjects() {
       ? new Date(project.deleted_at).toLocaleString("ja-JP")
       : "";
 
-    item.innerHTML = `
-      <h3>${escapeHTML(project.title)}</h3>
-      <p>削除日：${deletedDate}</p>
-    `;
-
+    const title = document.createElement("h3");
+    title.textContent = project.title;
+    
+    const date = document.createElement("p");
+    date.textContent = `削除日：${deletedDate}`;
+    
+    item.appendChild(title);
+    item.appendChild(date);
     list.appendChild(item);
   });
 }
