@@ -362,6 +362,50 @@
               >
                 募集終了
               </button>
+
+              <button
+                class="button primary hidden"
+                id="re-recruitment-button"
+                type="button"
+              >
+                再募集設定
+              </button>
+            
+            </div>
+
+            <!-- 再募集設定 -->
+            <div id="re-recruitment-panel" class="sub-panel hidden">
+            
+              <h3>再募集の期間設定</h3>
+            
+              <p>
+                新しい募集期間を設定してください。
+                研究内容やこれまでの参加者履歴は変更されません。
+              </p>
+            
+              <label for="re-recruitment-start">募集開始日</label>
+              <input
+                type="date"
+                id="re-recruitment-start"
+                required
+              >
+            
+              <label for="re-recruitment-end">募集終了日</label>
+              <input
+                type="date"
+                id="re-recruitment-end"
+                required
+              >
+            
+              <button id="save-re-recruitment" type="button">
+                再募集を開始
+              </button>
+            
+              <button id="cancel-re-recruitment" type="button">
+                キャンセル
+              </button>
+            
+              <p id="re-recruitment-message"></p>
             
             </div>
             <p
@@ -399,4 +443,3 @@
 
 </body>
 </html>
-```
