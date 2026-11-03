@@ -292,8 +292,8 @@ $("new-project-button").addEventListener("click", () => {
   $("research-form-message").textContent = "";
 
   $("research-list-panel").classList.add("hidden");
-  $("research-form-panel").classList.add("hidden");
-  $("research-detail-panel").classList.remove("hidden");
+  $("research-detail-panel").classList.add("hidden");
+  $("research-form-panel").classList.remove("hidden");
 
   $("research-form-panel").scrollIntoView({
     behavior: "smooth",
