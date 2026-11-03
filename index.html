@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="description" content="大学内の研究募集・実験参加者マッチングシステム">
+  <title>研究参加マッチング</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Supabase JavaScript client -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js" defer></script>
+  <script src="app.js" defer></script>
+</head>
+<body>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="研究参加マッチング ホーム">
+      <span class="brand-mark">研</span>
+      <span>研究参加マッチング</span>
+    </a>
+    <span class="header-note">大学内 研究募集システム</span>
+  </header>
+
+  <main class="page">
+    <section class="welcome">
+      <p class="eyebrow">RESEARCH PARTICIPATION</p>
+      <h1>研究と、参加したい人をつなぐ。</h1>
+      <p class="lead">学内の研究募集を見つけたり、自分の研究への参加者を募集したりできます。</p>
+    </section>
+
+    <section class="panel" id="login-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>ログイン</h2>
+          <p>登録済みのアカウントでログインしてください。</p>
+        </div>
+      </div>
+      <form id="login-form" class="form">
+        <label for="login-email">メールアドレス</label>
+        <input id="login-email" name="email" type="email" autocomplete="username"
+               placeholder="大学メールアドレス（仮）" required>
+        <label for="login-password">パスワード</label>
+        <input id="login-password" name="password" type="password"
+               autocomplete="current-password" placeholder="パスワード" required>
+        <button class="button primary" type="submit">ログイン</button>
+        <p class="form-message" id="login-message" role="status" aria-live="polite"></p>
+      </form>
+      <p class="small-note">※ 現在は画面の土台です。認証方式（大学メール・大学ID等）は、動作確認用の初期画面を見ながら決めていきます。</p>
+    </section>
+
+    <section class="panel hidden" id="menu-panel">
+      <div class="panel-heading">
+        <div>
+          <h2>利用メニュー</h2>
+          <p id="signed-in-label">ログイン中</p>
+        </div>
+        <button class="button secondary compact" id="logout-button" type="button">ログアウト</button>
+      </div>
+      <div class="menu-grid">
+        <button class="menu-card" type="button" data-view="participant">
+          <span class="menu-icon">🎓</span>
+          <strong>研究に参加する</strong>
+          <span>募集中の研究を探す・予約する</span>
+        </button>
+        <button class="menu-card" type="button" data-view="researcher">
+          <span class="menu-icon">🧪</span>
+          <strong>研究参加者を募集する</strong>
+          <span>募集を作成・管理する</span>
+        </button>
+      </div>
+      <section class="dashboard-preview hidden" id="view-panel">
+        <div class="panel-heading">
+          <div>
+            <p class="eyebrow" id="view-eyebrow">MENU</p>
+            <h2 id="view-title">メニュー</h2>
+          </div>
+          <button class="text-button" id="back-to-menu" type="button">メニューに戻る</button>
+        </div>
+        <p id="view-description"></p>
+        <div class="notice">
+          ここに次の段階で機能を追加していきます。まずは画面の動きと構成を確認しましょう。
+        </div>
+      </section>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>研究参加マッチングシステム — 開発中</p>
+  </footer>
+</body>
+</html>

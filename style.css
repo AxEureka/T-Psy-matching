@@ -1,0 +1,245 @@
+/* 全体の基本設定 */
+:root {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans JP",
+    "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
+  color: #263238;
+  background: #f5f7f8;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+button, input { font: inherit; }
+
+.site-header {
+  min-height: 68px;
+  padding: 0 5vw;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #fff;
+  border-bottom: 1px solid #e4e9ec;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #243b53;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: #287c78;
+}
+
+.header-note, .small-note, .site-footer {
+  color: #718096;
+  font-size: 0.84rem;
+}
+
+.page {
+  width: min(920px, 92%);
+  margin: 0 auto;
+  flex: 1;
+  padding: 52px 0 64px;
+}
+
+.welcome { margin-bottom: 30px; }
+
+.eyebrow {
+  margin: 0 0 10px;
+  color: #287c78;
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+}
+
+h1 {
+  margin: 0;
+  color: #243b53;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  line-height: 1.35;
+}
+
+.lead {
+  max-width: 650px;
+  margin: 14px 0 0;
+  color: #52616b;
+  line-height: 1.8;
+}
+
+.panel {
+  padding: clamp(22px, 4vw, 34px);
+  background: #fff;
+  border: 1px solid #e4e9ec;
+  border-radius: 18px;
+  box-shadow: 0 8px 28px rgba(31, 54, 67, 0.05);
+}
+
+.panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+h2 {
+  margin: 0;
+  color: #243b53;
+  font-size: 1.35rem;
+}
+
+.panel-heading p {
+  margin: 7px 0 0;
+  color: #718096;
+  font-size: 0.9rem;
+}
+
+.form {
+  display: grid;
+  gap: 10px;
+}
+
+.form label {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  font-weight: 650;
+}
+
+.form input {
+  width: 100%;
+  min-height: 48px;
+  padding: 11px 13px;
+  border: 1px solid #cbd5dc;
+  border-radius: 9px;
+  background: #fff;
+}
+
+.form input:focus {
+  outline: 3px solid rgba(40, 124, 120, 0.15);
+  border-color: #287c78;
+}
+
+.button {
+  min-height: 44px;
+  padding: 10px 18px;
+  border: 0;
+  border-radius: 9px;
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.primary {
+  margin-top: 12px;
+  color: #fff;
+  background: #287c78;
+}
+
+.primary:hover { background: #206a66; }
+.secondary { color: #34495e; background: #edf2f4; }
+.compact { min-height: 36px; padding: 7px 12px; }
+
+.form-message {
+  min-height: 1.4em;
+  margin: 0;
+  color: #a33b36;
+  font-size: 0.9rem;
+}
+
+.small-note {
+  margin: 18px 0 0;
+  line-height: 1.7;
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.menu-card {
+  min-height: 160px;
+  padding: 22px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
+  text-align: left;
+  color: #263238;
+  background: #fbfdfd;
+  border: 1px solid #dce7e7;
+  border-radius: 13px;
+  cursor: pointer;
+}
+
+.menu-card:hover {
+  border-color: #70aaa6;
+  background: #f4faf9;
+}
+
+.menu-icon { font-size: 1.6rem; }
+.menu-card strong { font-size: 1.05rem; }
+.menu-card span:last-child { color: #718096; font-size: 0.88rem; }
+
+.dashboard-preview {
+  margin-top: 28px;
+  padding-top: 24px;
+  border-top: 1px solid #e4e9ec;
+}
+
+.text-button {
+  padding: 6px 0;
+  color: #287c78;
+  background: none;
+  border: 0;
+  cursor: pointer;
+  font-weight: 650;
+}
+
+.notice {
+  margin-top: 18px;
+  padding: 16px;
+  color: #52616b;
+  background: #f3f7f7;
+  border-radius: 10px;
+  line-height: 1.7;
+}
+
+.hidden { display: none !important; }
+
+.site-footer {
+  padding: 20px 5vw;
+  text-align: center;
+  background: #fff;
+  border-top: 1px solid #e4e9ec;
+}
+
+.site-footer p { margin: 0; }
+
+@media (max-width: 600px) {
+  .site-header { min-height: 60px; padding: 0 4%; }
+  .header-note { display: none; }
+  .page { padding: 34px 0 44px; }
+  .menu-grid { grid-template-columns: 1fr; }
+  .menu-card { min-height: 130px; }
+  .panel-heading { align-items: center; }
+}
