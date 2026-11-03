@@ -500,6 +500,18 @@ function openProjectDetail(projectId) {
     !["recruiting", "paused"].includes(projectStatus)
   );
 
+  // 再募集設定ボタン
+  const reRecruitmentButton = $("re-recruitment-button");
+  
+  reRecruitmentButton.classList.toggle(
+    "hidden",
+    projectStatus !== "closed"
+  );
+  
+  // 再募集設定欄は最初は閉じておく
+  $("re-recruitment-panel").classList.add("hidden");
+  $("re-recruitment-message").textContent = "";
+
   // 編集
   $("edit-project-button").classList.toggle(
     "hidden",
@@ -632,6 +644,102 @@ $("close-project-button").addEventListener("click", () => {
   if (!confirmed) return;
 
   updateProjectStatus("closed");
+});
+
+// ------------------------------------
+// 再募集設定画面を開く
+// ------------------------------------
+
+$("re-recruitment-button").addEventListener("click", () => {
+  if (!selectedProject) return;
+
+  if (selectedProject.status !== "closed") {
+    alert("募集終了した研究のみ再募集できます。");
+    return;
+  }
+
+  $("re-recruitment-start").value = "";
+  $("re-recruitment-end").value = "";
+  $("re-recruitment-message").textContent = "";
+
+  $("re-recruitment-panel").classList.remove("hidden");
+
+  $("re-recruitment-panel").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
+
+
+// ------------------------------------
+// 再募集を開始
+// ------------------------------------
+
+$("save-re-recruitment").addEventListener("click", async () => {
+  if (!selectedProject) return;
+
+  const startDate = $("re-recruitment-start").value;
+  const endDate = $("re-recruitment-end").value;
+  const message = $("re-recruitment-message");
+
+  if (!startDate || !endDate) {
+    message.textContent = "募集開始日と募集終了日を入力してください。";
+    return;
+  }
+
+  if (startDate > endDate) {
+    message.textContent = "募集終了日は募集開始日以降に設定してください。";
+    return;
+  }
+
+  const confirmed = confirm(
+    "この研究の再募集を開始しますか？"
+  );
+
+  if (!confirmed) return;
+
+  message.textContent = "再募集を開始しています...";
+
+  const projectId = selectedProject.id;
+
+  const { data, error } = await supabaseClient
+    .from("research_projects")
+    .update({
+      recruitment_start: startDate,
+      recruitment_end: endDate,
+      status: "recruiting",
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", projectId)
+    .eq("owner_id", currentUser.id)
+    .eq("status", "closed")
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error(error);
+    message.textContent =
+      "再募集を開始できませんでした。" +
+      (error ? error.message : "研究情報を確認してください。");
+    return;
+  }
+
+  $("re-recruitment-panel").classList.add("hidden");
+
+  await loadProjects();
+
+  alert("再募集を開始しました！");
+
+  openProjectDetail(projectId);
+});
+
+
+// ------------------------------------
+// 再募集設定をキャンセル
+// ------------------------------------
+
+$("cancel-re-recruitment").addEventListener("click", () => {
+  $("re-recruitment-panel").classList.add("hidden");
 });
 
 // ------------------------------------
