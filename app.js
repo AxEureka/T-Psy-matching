@@ -468,11 +468,25 @@ async function updateProjectStatus(newStatus) {
 
 // 募集開始・再開
 $("start-project-button").addEventListener("click", () => {
+
+  const confirmed = window.confirm(
+    "この研究の募集を開始しますか？\n\n開始すると、参加者側に研究が公開されます。"
+  );
+
+  if (!confirmed) return;
+
   updateProjectStatus("recruiting");
 });
 
 // 募集終了
 $("close-project-button").addEventListener("click", () => {
+
+  const confirmed = window.confirm(
+    "この研究の募集を終了しますか？\n\n終了すると、参加者側に表示されなくなります。"
+  );
+
+  if (!confirmed) return;
+
   updateProjectStatus("closed");
 });
 
