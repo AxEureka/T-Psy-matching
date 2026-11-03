@@ -310,15 +310,20 @@ $("cancel-project-form").addEventListener("click", () => {
   $("research-form-panel").classList.add("hidden");
 });
 
+
 // ------------------------------------
-// 研究の新規保存
+// 研究の新規保存・編集保存
 // ------------------------------------
 
 $("research-form").addEventListener("submit", async (event) => {
   event.preventDefault();
 
   const message = $("research-form-message");
-  message.textContent = "保存しています...";
+  const isEditing = editingProjectId !== null;
+
+  message.textContent = isEditing
+    ? "変更を保存しています..."
+    : "保存しています...";
 
   const { data: userData, error: userError } =
     await supabaseClient.auth.getUser();
@@ -327,6 +332,90 @@ $("research-form").addEventListener("submit", async (event) => {
     message.textContent = "ログイン情報を確認できません。";
     return;
   }
+
+  currentUser = userData.user;
+
+  // 保存する研究情報
+  const project = {
+    title: $("project-title").value.trim(),
+    summary: $("project-summary").value.trim(),
+    target: $("project-target").value.trim(),
+    recruitment_method: $("project-method").value,
+    recruitment_start: $("project-start").value || null,
+    recruitment_end: $("project-end").value || null,
+    external_url: $("project-url").value.trim() || null,
+    updated_at: new Date().toISOString()
+  };
+
+  let error;
+
+  if (isEditing) {
+    // 既存の研究を更新
+    const result = await supabaseClient
+      .from("research_projects")
+      .update(project)
+      .eq("id", editingProjectId)
+      .eq("owner_id", currentUser.id);
+
+    error = result.error;
+
+  } else {
+    // 新しい研究を作成
+    const result = await supabaseClient
+      .from("research_projects")
+      .insert({
+        ...project,
+        owner_id: currentUser.id,
+        status: "draft"
+      });
+
+    error = result.error;
+  }
+
+  if (error) {
+    console.error(error);
+    message.textContent =
+      "保存できませんでした：" + error.message;
+    return;
+  }
+
+  // 編集状態を解除
+  const savedProjectId = editingProjectId;
+  editingProjectId = null;
+
+  // フォームを初期化
+  $("research-form").reset();
+  $("research-form-panel").classList.add("hidden");
+
+  $("research-form-panel").querySelector("h3").textContent =
+    "新しい研究を作成";
+
+  $("research-form").querySelector('button[type="submit"]').textContent =
+    "保存する";
+
+  // 最新の研究一覧を取得
+  await loadProjects();
+
+  if (isEditing) {
+    alert("研究内容を更新しました。");
+
+    // 更新した研究の詳細画面に戻る
+    openProjectDetail(savedProjectId);
+
+  } else {
+    alert("研究を保存しました。現在の状態は「準備中」です。");
+
+    // 新規作成した研究の詳細画面を開く
+    const newProject = currentProjects[0];
+
+    if (newProject) {
+      openProjectDetail(newProject.id);
+    } else {
+      $("research-list-panel").classList.remove("hidden");
+    }
+  }
+});
+
 
   currentUser = userData.user;
 
