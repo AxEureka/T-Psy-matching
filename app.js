@@ -289,6 +289,7 @@ function getStatusLabel(status) {
 // ------------------------------------
 
 $("new-project-button").addEventListener("click", () => {
+  editingProjectId = null;
   $("research-form").reset();
   $("research-form-message").textContent = "";
 
@@ -416,38 +417,6 @@ $("research-form").addEventListener("submit", async (event) => {
   }
 });
 
-
-  currentUser = userData.user;
-
-  const project = {
-    owner_id: currentUser.id,
-    title: $("project-title").value.trim(),
-    summary: $("project-summary").value.trim(),
-    target: $("project-target").value.trim(),
-    recruitment_method: $("project-method").value,
-    status: "draft",
-    recruitment_start: $("project-start").value || null,
-    recruitment_end: $("project-end").value || null,
-    external_url: $("project-url").value.trim() || null
-  };
-
-  const { error } = await supabaseClient
-    .from("research_projects")
-    .insert(project);
-
-  if (error) {
-    console.error(error);
-    message.textContent = "保存できませんでした：" + error.message;
-    return;
-  }
-
-  $("research-form").reset();
-  $("research-form-panel").classList.add("hidden");
-
-  await loadProjects();
-
-  alert("研究を保存しました。現在の状態は「準備中」です。");
-});
 
 // ------------------------------------
 // 研究詳細画面
