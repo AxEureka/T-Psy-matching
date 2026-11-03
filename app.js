@@ -13,6 +13,7 @@ const supabaseClient = window.supabaseClient;
 let currentUser = null;
 let currentProjects = [];
 let selectedProject = null;
+let editingProjectId = null;
 
 // ------------------------------------
 // ログイン・新規登録画面の切り替え
@@ -456,6 +457,46 @@ function openProjectDetail(projectId) {
     block: "start"
   });
 }
+
+// ------------------------------------
+// 研究の編集画面を開く
+// ------------------------------------
+
+$("edit-project-button").addEventListener("click", () => {
+  if (!selectedProject) return;
+
+  // 編集できる状態か確認
+  if (!["draft", "paused"].includes(selectedProject.status)) {
+    alert("この研究は現在編集できません。");
+    return;
+  }
+
+  // 編集する研究IDを記録
+  editingProjectId = selectedProject.id;
+
+  // 既存の研究情報をフォームに読み込む
+  $("project-title").value = selectedProject.title || "";
+  $("project-summary").value = selectedProject.summary || "";
+  $("project-target").value = selectedProject.target || "";
+  $("project-method").value = selectedProject.recruitment_method || "";
+  $("project-start").value = selectedProject.recruitment_start || "";
+  $("project-end").value = selectedProject.recruitment_end || "";
+  $("project-url").value = selectedProject.external_url || "";
+
+  // 編集画面の見出しとボタンを変更
+  $("research-form-panel").querySelector("h3").textContent = "研究を編集";
+  $("research-form").querySelector('button[type="submit"]').textContent =
+    "変更を保存";
+
+  // 画面を切り替える
+  $("research-detail-panel").classList.add("hidden");
+  $("research-form-panel").classList.remove("hidden");
+
+  $("research-form-panel").scrollIntoView({
+    behavior: "smooth",
+    block: "start"
+  });
+});
   
 // ------------------------------------
 // 募集状態の更新
