@@ -440,6 +440,12 @@ function openProjectDetail(projectId) {
     !["recruiting", "paused"].includes(selectedProject.status)
   );
 
+  // 編集ボタン
+  $("edit-project-button").classList.toggle(
+    "hidden",
+    !["draft", "paused"].includes(selectedProject.status)
+  );
+
   $("research-list-panel").classList.add("hidden");
   $("research-form-panel").classList.add("hidden");
   $("research-detail-panel").classList.remove("hidden");
