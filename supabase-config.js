@@ -12,8 +12,8 @@
 
 "use strict";
 
-const SUPABASE_URL = "ここにSupabaseのProject URLを貼り付け";
-const SUPABASE_ANON_KEY = "ここにPublishable keyを貼り付け";
+const SUPABASE_URL = "https://jvgitrnvrmqcseguggrd.supabase.co";
+const SUPABASE_ANON_KEY = "sb_publishable_aqrr1dtDJxEI6v14IPIjbg_lzi2eMjl";
 
 window.supabaseClient = null;
 
