@@ -345,6 +345,47 @@
             </button>
           </section>
 
+          <!-- 削除済み研究の詳細画面 -->
+          <section id="deleted-project-detail-panel" class="sub-panel hidden">
+          
+            <button
+              class="text-button"
+              id="back-to-deleted-project-list"
+              type="button"
+            >
+              ← 削除済み研究一覧に戻る
+            </button>
+          
+            <div id="deleted-project-detail-content"></div>
+          
+            <div class="detail-actions">
+          
+              <button
+                class="button primary"
+                id="restore-project-button"
+                type="button"
+              >
+                研究を復元
+              </button>
+          
+              <button
+                class="button secondary"
+                id="permanently-delete-project-button"
+                type="button"
+              >
+                完全削除
+              </button>
+          
+            </div>
+          
+            <p
+              id="deleted-project-detail-message"
+              class="form-message"
+              role="status"
+            ></p>
+          
+          </section>
+
           <!-- 研究詳細 -->
           <div id="research-detail-panel" class="sub-panel hidden">
 
