@@ -1019,3 +1019,70 @@ $("restore-project-button").addEventListener("click", async () => {
   await loadDeletedProjects();
   await loadProjects();
 });
+
+// ------------------------------------
+// 研究の完全削除
+// ------------------------------------
+
+$("permanently-delete-project-button").addEventListener(
+  "click",
+  async () => {
+    if (!selectedDeletedProject) return;
+
+    const projectId = selectedDeletedProject.id;
+    const projectTitle = selectedDeletedProject.title;
+
+    // 1回目の確認
+    const typedTitle = prompt(
+      `「${projectTitle}」を完全削除します。\n\n` +
+      "実行するには研究タイトルを入力してください。"
+    );
+
+    if (typedTitle === null) return;
+
+    if (typedTitle.trim() !== projectTitle) {
+      alert("研究タイトルが一致しません。削除を中止しました。");
+      return;
+    }
+
+    // 2回目の確認
+    const confirmed = confirm(
+      `本当に「${projectTitle}」を完全削除しますか？\n\n` +
+      "この操作は取り消せません。"
+    );
+
+    if (!confirmed) return;
+
+    const message = $("deleted-project-detail-message");
+    message.textContent = "完全削除しています...";
+
+    const { data, error } = await supabaseClient
+      .from("research_projects")
+      .delete()
+      .eq("id", projectId)
+      .eq("owner_id", currentUser.id)
+      .not("deleted_at", "is", null)
+      .select("id")
+      .maybeSingle();
+
+    if (error || !data) {
+      console.error(error);
+
+      message.textContent =
+        "完全削除できませんでした。" +
+        (error ? error.message : "対象の研究を確認してください。");
+
+      return;
+    }
+
+    alert("研究を完全削除しました。");
+
+    selectedDeletedProject = null;
+
+    $("deleted-project-detail-panel").classList.add("hidden");
+    $("deleted-projects-panel").classList.remove("hidden");
+
+    await loadDeletedProjects();
+    await loadProjects();
+  }
+);
