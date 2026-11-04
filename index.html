@@ -370,7 +370,110 @@
                   公開する日時を選択できるようにします。
                 </p>
               
+                
                 <div id="appointment-slot-preview"></div>
+                
+                <!-- 日別の予約枠設定 -->
+                <div id="appointment-day-settings" class="hidden">
+                
+                  <h4>日別の予約枠設定</h4>
+                
+                  <p class="small-note">
+                    日付ごとに実施時間や予約枠を調整できます。
+                  </p>
+                
+                  <!-- 日別設定の作成 -->
+                  <button
+                    type="button"
+                    class="button secondary"
+                    id="generate-appointment-days-button"
+                  >
+                    日別設定を作成
+                  </button>
+                
+                  <!-- 日ごとの設定画面 -->
+                  <div id="appointment-day-editor" class="hidden">
+                
+                    <div class="form-actions">
+                
+                      <button
+                        type="button"
+                        class="button secondary"
+                        id="previous-appointment-day"
+                      >
+                        ◀ 前の日
+                      </button>
+                
+                      <strong id="appointment-day-date">
+                        日付
+                      </strong>
+                
+                      <button
+                        type="button"
+                        class="button secondary"
+                        id="next-appointment-day"
+                      >
+                        次の日 ▶
+                      </button>
+                
+                    </div>
+                
+                    <hr>
+                
+                    <!-- 実施しない日の設定 -->
+                    <label>
+                      <input
+                        type="checkbox"
+                        id="appointment-day-off"
+                      >
+                      この日は実験を実施しない
+                    </label>
+                
+                    <!-- その日の実施時間 -->
+                    <div id="appointment-day-time-settings">
+                
+                      <label for="appointment-day-time-start">
+                        この日の開始時刻
+                      </label>
+                      <input
+                        id="appointment-day-time-start"
+                        type="time"
+                      >
+                
+                      <label for="appointment-day-time-end">
+                        この日の終了時刻
+                      </label>
+                      <input
+                        id="appointment-day-time-end"
+                        type="time"
+                      >
+                
+                    </div>
+                
+                    <hr>
+                
+                    <h5>この日の予約枠</h5>
+                
+                    <div id="appointment-day-slot-list"></div>
+                
+                    <button
+                      type="button"
+                      class="button primary"
+                      id="save-appointment-day-button"
+                    >
+                      この日の設定を保存
+                    </button>
+                
+                    <p
+                      id="appointment-day-message"
+                      class="form-message"
+                      role="status"
+                    ></p>
+                
+                  </div>
+                
+                </div>
+
               
               </div>
 
