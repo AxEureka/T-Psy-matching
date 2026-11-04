@@ -1223,6 +1223,7 @@ $("appointment-interval").addEventListener(
   updateCustomIntervalField
 );
 
+
 // ------------------------------------
 // 日別の予約設定：日付生成と切り替え
 // ------------------------------------
@@ -1251,16 +1252,59 @@ function displayAppointmentDate(dateString) {
 }
 
 
-// 現在表示中の日の入力内容を保存
-// ※この段階ではブラウザ上の一時保存
+// 時刻を分に変換
+function timeToMinutes(time) {
+  const [hour, minute] = time.split(":").map(Number);
+  return hour * 60 + minute;
+}
+
+
+// 分を HH:MM に変換
+function minutesToTime(minutes) {
+  const hour = Math.floor(minutes / 60);
+  const minute = minutes % 60;
+
+  return (
+    String(hour).padStart(2, "0") +
+    ":" +
+    String(minute).padStart(2, "0")
+  );
+}
+
+
+// 予約枠の長さを取得
+function getAppointmentInterval() {
+  const selected = $("appointment-interval").value;
+
+  if (selected === "custom") {
+    return Number($("custom-interval").value);
+  }
+
+  return Number(selected);
+}
+
+
+// 開始時刻から終了時刻を計算
+function getSlotEndTime(startTime) {
+  const interval = getAppointmentInterval();
+
+  if (!startTime || !interval || interval <= 0) {
+    return "—";
+  }
+
+  return minutesToTime(
+    timeToMinutes(startTime) + interval
+  );
+}
+
+
+// 現在の日の状態を保存
 function saveCurrentAppointmentDayInput() {
   if (appointmentDays.length === 0) return;
 
   const day = appointmentDays[currentAppointmentDayIndex];
 
   day.isOff = $("appointment-day-off").checked;
-  day.startTime = $("appointment-day-time-start").value;
-  day.endTime = $("appointment-day-time-end").value;
 }
 
 
@@ -1275,10 +1319,7 @@ function renderAppointmentDay() {
 
   $("appointment-day-off").checked = day.isOff;
 
-  $("appointment-day-time-start").value = day.startTime;
-  $("appointment-day-time-end").value = day.endTime;
-
-  $("appointment-day-time-settings").classList.toggle(
+  $("appointment-day-slots-area").classList.toggle(
     "hidden",
     day.isOff
   );
@@ -1290,10 +1331,160 @@ function renderAppointmentDay() {
     currentAppointmentDayIndex === appointmentDays.length - 1;
 
   $("appointment-day-message").textContent = "";
+
+  renderAppointmentSlots(day);
 }
 
 
-// 日別設定を作成する
+// 予約枠一覧を表示
+function renderAppointmentSlots(day) {
+  const list = $("appointment-day-slot-list");
+  list.replaceChildren();
+
+  // 見出し
+  const header = document.createElement("div");
+  header.className = "appointment-slot-header";
+
+  ["開始時刻", "終了時刻", "定員", ""].forEach((label) => {
+    const item = document.createElement("span");
+    item.textContent = label;
+    header.appendChild(item);
+  });
+
+  list.appendChild(header);
+
+
+  day.slots.forEach((slot, index) => {
+
+    const row = document.createElement("div");
+    row.className = "appointment-slot-row";
+
+    // 開始時刻
+    const startArea = document.createElement("div");
+    startArea.className = "appointment-slot-start";
+
+    const [hour, minute] = slot.startTime.split(":");
+
+    const hourInput = document.createElement("input");
+    hourInput.type = "number";
+    hourInput.min = "0";
+    hourInput.max = "23";
+    hourInput.value = Number(hour);
+    hourInput.className = "slot-time-input";
+    hourInput.setAttribute("aria-label", "開始時刻の時");
+
+    const colon = document.createElement("span");
+    colon.textContent = ":";
+
+    const minuteInput = document.createElement("input");
+    minuteInput.type = "number";
+    minuteInput.min = "0";
+    minuteInput.max = "59";
+    minuteInput.value = minute;
+    minuteInput.className = "slot-time-input";
+    minuteInput.setAttribute("aria-label", "開始時刻の分");
+
+    startArea.append(hourInput, colon, minuteInput);
+
+
+    // 終了時刻（自動計算）
+    const endArea = document.createElement("div");
+    endArea.className = "appointment-slot-end";
+
+    const endText = document.createElement("strong");
+    endText.textContent = getSlotEndTime(slot.startTime);
+
+    endArea.appendChild(endText);
+
+
+    // 定員
+    const capacityArea = document.createElement("div");
+    capacityArea.className = "appointment-slot-capacity";
+
+    const capacityInput = document.createElement("input");
+    capacityInput.type = "number";
+    capacityInput.min = "1";
+    capacityInput.value = slot.capacity;
+    capacityInput.className = "slot-capacity-input";
+    capacityInput.setAttribute("aria-label", "予約枠の定員");
+
+    capacityArea.appendChild(capacityInput);
+
+
+    // 削除ボタン
+    const deleteButton = document.createElement("button");
+    deleteButton.type = "button";
+    deleteButton.className = "slot-delete-button";
+    deleteButton.textContent = "×";
+    deleteButton.title = "この予約枠を削除";
+
+
+    // 開始時刻を変更
+    function updateStartTime() {
+      const h = hourInput.value;
+      const m = minuteInput.value;
+
+      const valid =
+        h !== "" &&
+        m !== "" &&
+        Number(h) >= 0 &&
+        Number(h) <= 23 &&
+        Number(m) >= 0 &&
+        Number(m) <= 59;
+
+      if (!valid) {
+        endText.textContent = "—";
+        return;
+      }
+
+      slot.startTime =
+        String(Number(h)).padStart(2, "0") +
+        ":" +
+        String(Number(m)).padStart(2, "0");
+
+      endText.textContent = getSlotEndTime(slot.startTime);
+    }
+
+    hourInput.addEventListener("input", updateStartTime);
+    minuteInput.addEventListener("input", updateStartTime);
+
+
+    // 定員を変更
+    capacityInput.addEventListener("change", () => {
+      const value = Number(capacityInput.value);
+
+      if (!Number.isInteger(value) || value < 1) {
+        alert("定員は1人以上の整数にしてください。");
+        capacityInput.value = slot.capacity;
+        return;
+      }
+
+      slot.capacity = value;
+    });
+
+
+    // 予約枠を削除
+    deleteButton.addEventListener("click", () => {
+      if (!confirm("この予約枠を削除しますか？")) return;
+
+      day.slots.splice(index, 1);
+      renderAppointmentSlots(day);
+    });
+
+
+    row.append(
+      startArea,
+      endArea,
+      capacityArea,
+      deleteButton
+    );
+
+    list.appendChild(row);
+  });
+}
+
+
+// 日別設定を作成
 $("generate-appointment-days-button").addEventListener("click", () => {
 
   const startValue = $("appointment-date-start").value;
@@ -1309,14 +1500,26 @@ $("generate-appointment-days-button").addEventListener("click", () => {
     return;
   }
 
+  const startTime = $("appointment-time-start").value || "10:00";
+  const endTime = $("appointment-time-end").value || "16:00";
+
+  const interval = getAppointmentInterval();
+
+  if (!interval || !Number.isInteger(interval) || interval < 1) {
+    alert("予約枠の長さを正しく入力してください。");
+    return;
+  }
+
+  const startMinutes = timeToMinutes(startTime);
+  const endMinutes = timeToMinutes(endTime);
+
+  if (endMinutes <= startMinutes) {
+    alert("1日の終了時刻は開始時刻より後にしてください。");
+    return;
+  }
+
   const startDate = new Date(startValue + "T12:00:00");
   const endDate = new Date(endValue + "T12:00:00");
-
-  const defaultStartTime =
-    $("appointment-time-start").value || "10:00";
-
-  const defaultEndTime =
-    $("appointment-time-end").value || "16:00";
 
   appointmentDays = [];
 
@@ -1324,11 +1527,25 @@ $("generate-appointment-days-button").addEventListener("click", () => {
 
   while (currentDate <= endDate) {
 
+    const slots = [];
+
+    // 開始時刻を基準に予約枠を連続生成
+    // 終了時刻を超える場合も、最後の枠として生成する
+    let cursor = startMinutes;
+
+    while (cursor < endMinutes) {
+      slots.push({
+        startTime: minutesToTime(cursor),
+        capacity: 1
+      });
+
+      cursor += interval;
+    }
+
     appointmentDays.push({
       date: formatAppointmentDate(currentDate),
       isOff: false,
-      startTime: defaultStartTime,
-      endTime: defaultEndTime
+      slots: slots
     });
 
     currentDate.setDate(currentDate.getDate() + 1);
@@ -1371,23 +1588,20 @@ $("next-appointment-day").addEventListener("click", () => {
 
 // 実施しない日の切り替え
 $("appointment-day-off").addEventListener("change", () => {
-
   saveCurrentAppointmentDayInput();
-
   renderAppointmentDay();
-
 });
 
 
-// 時刻の変更を一時保存
-$("appointment-day-time-start").addEventListener("change", () => {
+// 日ごとの設定を一時保存
+$("save-appointment-day-button").addEventListener("click", () => {
+
   saveCurrentAppointmentDayInput();
-});
 
-$("appointment-day-time-end").addEventListener("change", () => {
-  saveCurrentAppointmentDayInput();
-});
+  $("appointment-day-message").textContent =
+    "この日の設定を一時保存しました。";
 
+});
 
 // 初期表示
 updateCustomIntervalField();
