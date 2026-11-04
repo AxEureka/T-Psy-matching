@@ -314,13 +314,44 @@ $("new-project-button").addEventListener("click", () => {
 });
 
 // ------------------------------------
-// 新規作成フォームを閉じる
+// 研究フォームをキャンセル
 // ------------------------------------
 
 $("cancel-project-form").addEventListener("click", () => {
-  $("research-form-panel").classList.add("hidden");
-});
 
+  // 編集中の場合
+  if (editingProjectId !== null) {
+
+    // 編集状態を解除
+    editingProjectId = null;
+
+    // 編集フォームを閉じる
+    $("research-form-panel").classList.add("hidden");
+
+    // 研究詳細画面に戻る
+    $("research-detail-panel").classList.remove("hidden");
+
+  } else {
+
+    // 新規作成中の場合は研究一覧に戻る
+    $("research-form-panel").classList.add("hidden");
+    $("research-list-panel").classList.remove("hidden");
+  }
+
+  // 入力内容をリセット
+  $("research-form").reset();
+  $("research-form-message").textContent = "";
+
+  // 見出しとボタンを元に戻す
+  $("research-form-panel").querySelector("h3").textContent =
+    "新しい研究を作成";
+
+  $("research-form").querySelector('button[type="submit"]').textContent =
+    "保存する";
+
+  // 募集方式の入力欄を初期状態に戻す
+  updateRecruitmentMethodFields();
+});
 
 // ------------------------------------
 // 研究の新規保存・編集保存
