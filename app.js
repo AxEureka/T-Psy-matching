@@ -966,3 +966,56 @@ $("back-to-deleted-project-list").addEventListener("click", () => {
   $("deleted-project-detail-panel").classList.add("hidden");
   $("deleted-projects-panel").classList.remove("hidden");
 });
+
+// ------------------------------------
+// 削除済み研究の復元
+// ------------------------------------
+
+$("restore-project-button").addEventListener("click", async () => {
+  if (!selectedDeletedProject) return;
+
+  const projectId = selectedDeletedProject.id;
+  const projectTitle = selectedDeletedProject.title;
+
+  const confirmed = confirm(
+    `「${projectTitle}」を復元しますか？\n\n` +
+    "復元後は通常の研究一覧に戻ります。\n" +
+    "研究の状態は「募集停止」になります。"
+  );
+
+  if (!confirmed) return;
+
+  const message = $("deleted-project-detail-message");
+  message.textContent = "復元しています...";
+
+  const { data, error } = await supabaseClient
+    .from("research_projects")
+    .update({
+      deleted_at: null,
+      status: "paused",
+      updated_at: new Date().toISOString()
+    })
+    .eq("id", projectId)
+    .eq("owner_id", currentUser.id)
+    .not("deleted_at", "is", null)
+    .select("id")
+    .maybeSingle();
+
+  if (error || !data) {
+    console.error(error);
+    message.textContent =
+      "復元できませんでした。" +
+      (error ? error.message : "研究情報を確認してください。");
+    return;
+  }
+
+  alert("研究を復元しました。");
+
+  selectedDeletedProject = null;
+
+  $("deleted-project-detail-panel").classList.add("hidden");
+  $("deleted-projects-panel").classList.remove("hidden");
+
+  await loadDeletedProjects();
+  await loadProjects();
+});
