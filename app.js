@@ -1223,5 +1223,171 @@ $("appointment-interval").addEventListener(
   updateCustomIntervalField
 );
 
+// ------------------------------------
+// 日別の予約設定：日付生成と切り替え
+// ------------------------------------
+
+let appointmentDays = [];
+let currentAppointmentDayIndex = 0;
+
+
+// 日付を YYYY-MM-DD 形式にする
+function formatAppointmentDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
+
+// 日付を日本語表示にする
+function displayAppointmentDate(dateString) {
+  const [year, month, day] = dateString.split("-").map(Number);
+  const date = new Date(year, month - 1, day);
+  const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
+
+  return `${year}年${month}月${day}日（${weekdays[date.getDay()]}）`;
+}
+
+
+// 現在表示中の日の入力内容を保存
+// ※この段階ではブラウザ上の一時保存
+function saveCurrentAppointmentDayInput() {
+  if (appointmentDays.length === 0) return;
+
+  const day = appointmentDays[currentAppointmentDayIndex];
+
+  day.isOff = $("appointment-day-off").checked;
+  day.startTime = $("appointment-day-time-start").value;
+  day.endTime = $("appointment-day-time-end").value;
+}
+
+
+// 日別設定画面を表示
+function renderAppointmentDay() {
+  if (appointmentDays.length === 0) return;
+
+  const day = appointmentDays[currentAppointmentDayIndex];
+
+  $("appointment-day-date").textContent =
+    displayAppointmentDate(day.date);
+
+  $("appointment-day-off").checked = day.isOff;
+
+  $("appointment-day-time-start").value = day.startTime;
+  $("appointment-day-time-end").value = day.endTime;
+
+  $("appointment-day-time-settings").classList.toggle(
+    "hidden",
+    day.isOff
+  );
+
+  $("previous-appointment-day").disabled =
+    currentAppointmentDayIndex === 0;
+
+  $("next-appointment-day").disabled =
+    currentAppointmentDayIndex === appointmentDays.length - 1;
+
+  $("appointment-day-message").textContent = "";
+}
+
+
+// 日別設定を作成する
+$("generate-appointment-days-button").addEventListener("click", () => {
+
+  const startValue = $("appointment-date-start").value;
+  const endValue = $("appointment-date-end").value;
+
+  if (!startValue || !endValue) {
+    alert("実験開始日と終了日を入力してください。");
+    return;
+  }
+
+  if (endValue < startValue) {
+    alert("終了日は開始日以降の日付にしてください。");
+    return;
+  }
+
+  const startDate = new Date(startValue + "T12:00:00");
+  const endDate = new Date(endValue + "T12:00:00");
+
+  const defaultStartTime =
+    $("appointment-time-start").value || "10:00";
+
+  const defaultEndTime =
+    $("appointment-time-end").value || "16:00";
+
+  appointmentDays = [];
+
+  const currentDate = new Date(startDate);
+
+  while (currentDate <= endDate) {
+
+    appointmentDays.push({
+      date: formatAppointmentDate(currentDate),
+      isOff: false,
+      startTime: defaultStartTime,
+      endTime: defaultEndTime
+    });
+
+    currentDate.setDate(currentDate.getDate() + 1);
+  }
+
+  currentAppointmentDayIndex = 0;
+
+  $("appointment-day-editor").classList.remove("hidden");
+
+  renderAppointmentDay();
+
+});
+
+
+// 前の日へ
+$("previous-appointment-day").addEventListener("click", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  if (currentAppointmentDayIndex > 0) {
+    currentAppointmentDayIndex--;
+    renderAppointmentDay();
+  }
+
+});
+
+
+// 次の日へ
+$("next-appointment-day").addEventListener("click", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  if (currentAppointmentDayIndex < appointmentDays.length - 1) {
+    currentAppointmentDayIndex++;
+    renderAppointmentDay();
+  }
+
+});
+
+
+// 実施しない日の切り替え
+$("appointment-day-off").addEventListener("change", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  renderAppointmentDay();
+
+});
+
+
+// 時刻の変更を一時保存
+$("appointment-day-time-start").addEventListener("change", () => {
+  saveCurrentAppointmentDayInput();
+});
+
+$("appointment-day-time-end").addEventListener("change", () => {
+  saveCurrentAppointmentDayInput();
+});
+
+
 // 初期表示
 updateCustomIntervalField();
