@@ -1134,5 +1134,26 @@ $("project-method").addEventListener(
   updateRecruitmentMethodFields
 );
 
+// ------------------------------------
+// 予約枠の長さ：カスタム入力欄の切り替え
+// ------------------------------------
+
+function updateCustomIntervalField() {
+  const interval = $("appointment-interval").value;
+  const customSettings = $("custom-interval-settings");
+
+  if (interval === "custom") {
+    customSettings.classList.remove("hidden");
+  } else {
+    customSettings.classList.add("hidden");
+  }
+}
+
+// 予約枠の長さが変更されたとき
+$("appointment-interval").addEventListener(
+  "change",
+  updateCustomIntervalField
+);
+
 // 初期表示
-updateRecruitmentMethodFields();
+updateCustomIntervalField();
