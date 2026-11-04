@@ -1065,25 +1065,14 @@ $("permanently-delete-project-button").addEventListener(
     const projectId = selectedDeletedProject.id;
     const projectTitle = selectedDeletedProject.title;
 
-    // 1回目の確認
-    const typedTitle = prompt(
-      `「${projectTitle}」を完全削除します。\n\n` +
-      "実行するには研究タイトルを入力してください。"
-    );
-
-    if (typedTitle === null) return;
-
-    if (typedTitle.trim() !== projectTitle) {
-      alert("研究タイトルが一致しません。削除を中止しました。");
-      return;
-    }
 
     // 2回目の確認
     const confirmed = confirm(
       `本当に「${projectTitle}」を完全削除しますか？\n\n` +
-      "この操作は取り消せません。"
+      "完全削除した研究は元に戻せません。\n" +
+      "この研究のデータも削除されます。"
     );
-
+    
     if (!confirmed) return;
 
     const message = $("deleted-project-detail-message");
