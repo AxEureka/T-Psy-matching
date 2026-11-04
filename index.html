@@ -284,6 +284,16 @@
                 id="project-end"
                 type="date"
               >
+
+              <label for="project-duration-estimate">
+                所要時間の目安（分）
+              </label>
+              <input
+                id="project-duration-estimate"
+                type="number"
+                min="1"
+                placeholder="例：40"
+              >
               
               <!-- 外部フォーム方式の設定 -->
               <div id="external-form-settings">
@@ -333,23 +343,28 @@
                   value="16:00"
                 >
               
-                <label for="appointment-interval">予約枠の間隔</label>
+                <label for="appointment-interval">
+                  予約枠の長さ（分）
+                </label>
+                
                 <select id="appointment-interval">
                   <option value="15">15分</option>
                   <option value="30" selected>30分</option>
                   <option value="60">60分</option>
+                  <option value="custom">カスタム</option>
                 </select>
-              
-                <label for="appointment-duration">実験の所要時間</label>
-                <select id="appointment-duration">
-                  <option value="15">15分</option>
-                  <option value="30" selected>30分</option>
-                  <option value="45">45分</option>
-                  <option value="60">60分</option>
-                  <option value="90">90分</option>
-                  <option value="120">120分</option>
-                </select>
-              
+                
+                <div id="custom-interval-settings" class="hidden">
+                  <label for="custom-interval">
+                    予約枠の長さ（分）
+                  </label>
+                  <input
+                    id="custom-interval"
+                    type="number"
+                    min="1"
+                    placeholder="例：40"
+                  >
+                </div>              
                 <p class="small-note">
                   設定した条件から予約候補を生成し、
                   公開する日時を選択できるようにします。
