@@ -1108,3 +1108,31 @@ $("permanently-delete-project-button").addEventListener(
     await loadProjects();
   }
 );
+
+// ------------------------------------
+// 募集方式による入力欄の切り替え
+// ------------------------------------
+
+function updateRecruitmentMethodFields() {
+  const method = $("project-method").value;
+
+  const externalSettings = $("external-form-settings");
+  const appointmentSettings = $("appointment-settings");
+
+  if (method === "external_form") {
+    externalSettings.classList.remove("hidden");
+    appointmentSettings.classList.add("hidden");
+  } else {
+    externalSettings.classList.add("hidden");
+    appointmentSettings.classList.remove("hidden");
+  }
+}
+
+// 募集方式が変更されたとき
+$("project-method").addEventListener(
+  "change",
+  updateRecruitmentMethodFields
+);
+
+// 初期表示
+updateRecruitmentMethodFields();
