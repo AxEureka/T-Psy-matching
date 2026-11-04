@@ -268,15 +268,7 @@ function renderProjectList() {
       (project.duration_estimate_minutes
         ? project.duration_estimate_minutes + "分"
         : "未設定");
-    
-    const duration = document.createElement("span");
-    duration.className = "project-meta";
-    duration.textContent =
-      "所要時間の目安：" +
-      (project.duration_estimate_minutes
-        ? project.duration_estimate_minutes + "分"
-        : "未設定");
-    
+        
     card.append(title, status, method, dates, duration);
 
     card.addEventListener("click", () => {
