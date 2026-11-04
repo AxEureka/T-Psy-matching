@@ -268,8 +268,24 @@ function renderProjectList() {
       (project.duration_estimate_minutes
         ? project.duration_estimate_minutes + "分"
         : "未設定");
+
+    // 最終更新日時
+    const updated = document.createElement("span");
+    updated.className = "project-meta";
+    
+    updated.textContent =
+      "最終更新：" +
+      (project.updated_at
+        ? new Date(project.updated_at).toLocaleString("ja-JP", {
+            year: "numeric",
+            month: "2-digit",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit"
+          })
+        : "未記録");
         
-    card.append(title, status, method, dates, duration);
+    card.append(title, status, method, dates, duration, updated);
 
     card.addEventListener("click", () => {
       openProjectDetail(project.id);
