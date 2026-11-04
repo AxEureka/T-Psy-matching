@@ -420,41 +420,30 @@
                 
                     <hr>
                 
+                    
                     <!-- 実施しない日の設定 -->
-                    <label>
+                    <label class="appointment-day-off-label">
                       <input
                         type="checkbox"
                         id="appointment-day-off"
                       >
-                      この日は実験を実施しない
+                      <span>この日は実験を実施しない</span>
                     </label>
-                
-                    <!-- その日の実施時間 -->
-                    <div id="appointment-day-time-settings">
-                
-                      <label for="appointment-day-time-start">
-                        この日の開始時刻
-                      </label>
-                      <input
-                        id="appointment-day-time-start"
-                        type="time"
-                      >
-                
-                      <label for="appointment-day-time-end">
-                        この日の終了時刻
-                      </label>
-                      <input
-                        id="appointment-day-time-end"
-                        type="time"
-                      >
-                
-                    </div>
-                
+                    
                     <hr>
-                
-                    <h5>この日の予約枠</h5>
-                
-                    <div id="appointment-day-slot-list"></div>
+                    
+                    <!-- 予約枠一覧 -->
+                    <div id="appointment-day-slots-area">
+                    
+                      <h5>この日の予約枠</h5>
+                    
+                      <p class="small-note">
+                        開始時刻を変更すると、予約枠の長さに応じて終了時刻が自動計算されます。
+                      </p>
+                    
+                      <div id="appointment-day-slot-list"></div>
+                    
+                    </div>
                 
                     <button
                       type="button"
