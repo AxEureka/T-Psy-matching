@@ -261,7 +261,23 @@ function renderProjectList() {
       " ～ " +
       (project.recruitment_end || "未設定");
 
-    card.append(title, status, method, dates);
+    const duration = document.createElement("span");
+    duration.className = "project-meta";
+    duration.textContent =
+      "所要時間の目安：" +
+      (project.duration_estimate_minutes
+        ? project.duration_estimate_minutes + "分"
+        : "未設定");
+    
+    const duration = document.createElement("span");
+    duration.className = "project-meta";
+    duration.textContent =
+      "所要時間の目安：" +
+      (project.duration_estimate_minutes
+        ? project.duration_estimate_minutes + "分"
+        : "未設定");
+    
+    card.append(title, status, method, dates, duration);
 
     card.addEventListener("click", () => {
       openProjectDetail(project.id);
@@ -343,13 +359,16 @@ $("research-form").addEventListener("submit", async (event) => {
     title: $("project-title").value.trim(),
     summary: $("project-summary").value.trim(),
     target: $("project-target").value.trim(),
+    duration_estimate_minutes:
+      $("project-duration-estimate").value
+        ? Number($("project-duration-estimate").value)
+        : null,
     recruitment_method: $("project-method").value,
     recruitment_start: $("project-start").value || null,
     recruitment_end: $("project-end").value || null,
     external_url: $("project-url").value.trim() || null,
     updated_at: new Date().toISOString()
   };
-
   let error;
 
     // ------------------------------------
@@ -483,6 +502,13 @@ function openProjectDetail(projectId) {
   target.textContent =
     "募集対象：" + (selectedProject.target || "未設定");
 
+  const duration = document.createElement("p");
+  duration.textContent =
+    "所要時間の目安：" +
+    (selectedProject.duration_estimate_minutes
+      ? selectedProject.duration_estimate_minutes + "分"
+      : "未設定");
+
   const method = document.createElement("p");
   method.textContent =
     "募集方式：" +
@@ -497,7 +523,7 @@ function openProjectDetail(projectId) {
     " ～ " +
     (selectedProject.recruitment_end || "未設定");
 
-  content.append(title, status, summary, target, method, dates);
+  content.append(title, status, summary, target, duration, method, dates);
 
   if (selectedProject.external_url) {
     const url = document.createElement("p");
@@ -583,7 +609,10 @@ $("edit-project-button").addEventListener("click", () => {
   $("project-title").value = selectedProject.title || "";
   $("project-summary").value = selectedProject.summary || "";
   $("project-target").value = selectedProject.target || "";
+  $("project-duration-estimate").value =
+    selectedProject.duration_estimate_minutes ?? "";
   $("project-method").value = selectedProject.recruitment_method || "";
+  updateRecruitmentMethodFields();
   $("project-start").value = selectedProject.recruitment_start || "";
   $("project-end").value = selectedProject.recruitment_end || "";
   $("project-url").value = selectedProject.external_url || "";
