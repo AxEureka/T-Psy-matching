@@ -352,6 +352,39 @@ $("research-form").addEventListener("submit", async (event) => {
 
   let error;
 
+    // ------------------------------------
+  // 研究タイトルの重複チェック
+  // ------------------------------------
+
+  const { data: existingProjects, error: checkError } =
+    await supabaseClient
+      .from("research_projects")
+      .select("id, title")
+      .eq("owner_id", currentUser.id);
+
+  if (checkError) {
+    console.error(checkError);
+    message.textContent =
+      "重複チェックに失敗しました：" + checkError.message;
+    return;
+  }
+
+  const normalizedTitle = project.title.toLowerCase().trim();
+
+  const duplicate = (existingProjects || []).some((existing) => {
+    if (isEditing && existing.id === editingProjectId) {
+      return false;
+    }
+
+    return existing.title.toLowerCase().trim() === normalizedTitle;
+  });
+
+  if (duplicate) {
+    message.textContent =
+      "同じタイトルの研究が既に登録されています。別のタイトルを入力してください。";
+    return;
+  }
+
   if (isEditing) {
     // 既存の研究を更新
     const result = await supabaseClient
