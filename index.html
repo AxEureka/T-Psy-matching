@@ -259,37 +259,92 @@
                 placeholder="研究内容を簡単に説明してください"
               ></textarea>
 
-              <label for="project-target">募集対象</label>
-              <input
-                id="project-target"
-                type="text"
-                placeholder="例：大学生、18歳以上の方"
-              >
-
-              <label for="project-method">募集方式</label>
-              <select id="project-method">
-                <option value="external_form">外部フォーム方式</option>
-                <option value="appointment">日時予約方式</option>
-              </select>
-
+              
               <label for="project-start">募集開始日（予定）</label>
               <input
                 id="project-start"
                 type="date"
               >
-
+              
               <label for="project-end">募集終了日（予定）</label>
               <input
                 id="project-end"
                 type="date"
               >
-
-              <label for="project-url">外部フォームURL</label>
-              <input
-                id="project-url"
-                type="url"
-                placeholder="https://..."
-              >
+              
+              <!-- 外部フォーム方式の設定 -->
+              <div id="external-form-settings">
+              
+                <label for="project-url">外部フォームURL</label>
+                <input
+                  id="project-url"
+                  type="url"
+                  placeholder="https://..."
+                >
+              
+              </div>
+              
+              <!-- 日時予約方式の設定 -->
+              <div id="appointment-settings" class="hidden">
+              
+                <h4>実験日時の設定</h4>
+              
+                <p class="small-note">
+                  実験を実施する期間と時間帯を設定します。
+                  後から実施可能な予約枠を選択できます。
+                </p>
+              
+                <label for="appointment-date-start">実験開始日</label>
+                <input
+                  id="appointment-date-start"
+                  type="date"
+                >
+              
+                <label for="appointment-date-end">実験終了日</label>
+                <input
+                  id="appointment-date-end"
+                  type="date"
+                >
+              
+                <label for="appointment-time-start">1日の開始時刻</label>
+                <input
+                  id="appointment-time-start"
+                  type="time"
+                  value="10:00"
+                >
+              
+                <label for="appointment-time-end">1日の終了時刻</label>
+                <input
+                  id="appointment-time-end"
+                  type="time"
+                  value="16:00"
+                >
+              
+                <label for="appointment-interval">予約枠の間隔</label>
+                <select id="appointment-interval">
+                  <option value="15">15分</option>
+                  <option value="30" selected>30分</option>
+                  <option value="60">60分</option>
+                </select>
+              
+                <label for="appointment-duration">実験の所要時間</label>
+                <select id="appointment-duration">
+                  <option value="15">15分</option>
+                  <option value="30" selected>30分</option>
+                  <option value="45">45分</option>
+                  <option value="60">60分</option>
+                  <option value="90">90分</option>
+                  <option value="120">120分</option>
+                </select>
+              
+                <p class="small-note">
+                  設定した条件から予約候補を生成し、
+                  公開する日時を選択できるようにします。
+                </p>
+              
+                <div id="appointment-slot-preview"></div>
+              
+              </div>
 
               <p class="small-note">
                 保存した研究は「準備中」として登録されます。
