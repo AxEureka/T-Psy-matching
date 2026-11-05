@@ -676,6 +676,30 @@ $("edit-project-button").addEventListener("click", () => {
     selectedProject.appointment_date_start || "";
   $("appointment-date-end").value =
     selectedProject.appointment_date_end || "";
+
+  // 実験場所を復元
+  $("appointment-location-type").value =
+    selectedProject.appointment_location_type || "specified";
+  
+  $("appointment-location").value =
+    selectedProject.appointment_location || "";
+  
+  updateAppointmentLocationField();
+  
+  
+  // 日別の予約設定を復元
+  appointmentDays = Array.isArray(selectedProject.appointment_days)
+    ? JSON.parse(JSON.stringify(selectedProject.appointment_days))
+    : [];
+  
+  currentAppointmentDayIndex = 0;
+  
+  if (appointmentDays.length > 0) {
+    $("appointment-day-editor").classList.remove("hidden");
+    renderAppointmentDay();
+  } else {
+    $("appointment-day-editor").classList.add("hidden");
+  }
   
   $("project-url").value = selectedProject.external_url || "";
   // 編集画面の見出しとボタンを変更
