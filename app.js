@@ -1617,17 +1617,18 @@ $("generate-appointment-days-button").addEventListener("click", () => {
     return;
   }
 
-  // 既存の日別設定がある場合は上書き確認
-  if (appointmentDays.length > 0) {
-    const confirmed = confirm(
-      "現在の日別設定を、変更後の基本設定で再生成します。\n\n" +
-      "これまでの日別設定（個別の時刻・定員・休み設定）は上書きされます。\n\n" +
-      "再生成してもよろしいですか？"
-    );
-
-    if (!confirmed) {
-      return;
-    }
+  // 日別設定の生成確認
+  const hasExistingDays = appointmentDays.length > 0;
+  
+  const confirmed = confirm(
+    hasExistingDays
+      ? "現在の日別設定を上書きして、新しい基本設定から生成します。\n\nよろしいですか？"
+      : "基本設定をもとに日別設定を生成します。\n\nよろしいですか？"
+  );
+  
+  if (!confirmed) {
+    return;
+  }
   }
 
   const startDate = new Date(startValue + "T12:00:00");
