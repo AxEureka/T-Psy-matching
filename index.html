@@ -32,7 +32,7 @@
       <p class="eyebrow">RESEARCH PARTICIPATION</p>
       <h1>研究と、参加したい人をつなぐ。</h1>
       <p class="lead">
-        学内の研究募集を見つけたり、自分の研究への参加者を募集したりできます。
+        学内の研究募集を見つけたり、自分の研究へのを募集したりできます。
       </p>
     </section>
 
@@ -722,21 +722,61 @@
 
         </div>
 
-        <!-- ================================= -->
-        <!-- 参加者メニュー -->
-        <!-- ================================= -->
+        
+<!-- ================================= -->
+<!-- 参加者メニュー -->
+<!-- ================================= -->
 
-        <div id="participant-dashboard" class="hidden">
+<div id="participant-dashboard" class="hidden">
 
-          <p class="notice">
-            参加者向けの募集一覧・予約機能は次の段階で追加します。
-          </p>
+  <h2>参加者メニュー</h2>
 
-        </div>
+  <!-- 予約・参加予定の研究 -->
+  <section class="participant-section">
 
-      </section>
+    <h3>予約・参加予定の研究</h3>
 
-    </section>
+    <div id="participant-reservations">
+
+      <p class="notice">
+        現在、予約・参加予定の研究はありません。
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- 募集中の研究一覧 -->
+  <section class="participant-section">
+
+    <h3>募集中の研究</h3>
+
+    <div id="participant-research-list">
+
+      <p class="notice">
+        現在募集中の研究を読み込んでいます。
+      </p>
+
+    </div>
+
+  </section>
+
+  <!-- 研究詳細 -->
+  <section id="participant-research-detail"
+           class="hidden">
+
+    <button type="button"
+            id="participant-back-to-list">
+      研究一覧に戻る
+    </button>
+
+    <div id="participant-research-detail-content">
+    </div>
+
+  </section>
+
+</div>
+
 
   </main>
 
