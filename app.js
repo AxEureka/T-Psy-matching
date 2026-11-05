@@ -1586,6 +1586,7 @@ function renderAppointmentSlots(day) {
 }
 
 
+
 // 日別設定を作成
 $("generate-appointment-days-button").addEventListener("click", () => {
 
@@ -1624,19 +1625,19 @@ $("generate-appointment-days-button").addEventListener("click", () => {
     Number($("appointment-default-capacity").value) || 1;
 
   if (!Number.isInteger(capacity) || capacity < 1) {
-    alert("基本定員は1以上の整数を入力してください。");
+    alert("基本定員は1人以上の整数を入力してください。");
     return;
   }
 
   // 日別設定の生成確認
   const hasExistingDays = appointmentDays.length > 0;
-  
+
   const confirmed = confirm(
     hasExistingDays
       ? "現在の日別設定を上書きして、新しい基本設定から生成します。\n\nよろしいですか？"
       : "基本設定をもとに日別設定を生成します。\n\nよろしいですか？"
   );
-  
+
   if (!confirmed) {
     return;
   }
@@ -1651,7 +1652,6 @@ $("generate-appointment-days-button").addEventListener("click", () => {
   while (currentDate <= endDate) {
 
     const slots = [];
-
     let cursor = startMinutes;
 
     while (cursor < endMinutes) {
@@ -1680,6 +1680,57 @@ $("generate-appointment-days-button").addEventListener("click", () => {
 
   $("appointment-day-message").textContent =
     "新しい基本設定から日別設定を生成しました。";
+
+});
+
+
+// ------------------------------------
+// 日別設定の切り替え・操作
+// ------------------------------------
+
+// 前の日へ
+$("previous-appointment-day").addEventListener("click", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  if (currentAppointmentDayIndex > 0) {
+    currentAppointmentDayIndex--;
+    renderAppointmentDay();
+  }
+
+});
+
+
+// 次の日へ
+$("next-appointment-day").addEventListener("click", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  if (currentAppointmentDayIndex < appointmentDays.length - 1) {
+    currentAppointmentDayIndex++;
+    renderAppointmentDay();
+  }
+
+});
+
+
+// 実施しない日の切り替え
+$("appointment-day-off").addEventListener("change", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  renderAppointmentDay();
+
+});
+
+
+// 日ごとの設定を一時保存
+$("save-appointment-day-button").addEventListener("click", () => {
+
+  saveCurrentAppointmentDayInput();
+
+  $("appointment-day-message").textContent =
+    "この日の設定を一時保存しました。";
 
 });
 
