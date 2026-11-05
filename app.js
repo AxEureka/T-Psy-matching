@@ -405,6 +405,13 @@ $("research-form").addEventListener("submit", async (event) => {
     recruitment_method: $("project-method").value,
     recruitment_start: $("project-start").value || null,
     recruitment_end: $("project-end").value || null,
+
+    // 実験実施期間
+    appointment_date_start:
+      $("appointment-date-start").value || null,
+    appointment_date_end:
+      $("appointment-date-end").value || null,
+    
     external_url: $("project-url").value.trim() || null,
     updated_at: new Date().toISOString()
   };
@@ -654,8 +661,14 @@ $("edit-project-button").addEventListener("click", () => {
   updateRecruitmentMethodFields();
   $("project-start").value = selectedProject.recruitment_start || "";
   $("project-end").value = selectedProject.recruitment_end || "";
+  
+  // 実験実施期間
+  $("appointment-date-start").value =
+    selectedProject.appointment_date_start || "";
+  $("appointment-date-end").value =
+    selectedProject.appointment_date_end || "";
+  
   $("project-url").value = selectedProject.external_url || "";
-
   // 編集画面の見出しとボタンを変更
   $("research-form-panel").querySelector("h3").textContent = "研究を編集";
   $("research-form").querySelector('button[type="submit"]').textContent =
