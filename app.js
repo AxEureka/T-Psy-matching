@@ -168,6 +168,8 @@ document.querySelectorAll("[data-view]").forEach((button) => {
 
     if (isResearcher) {
       await loadProjects();
+    } else {
+      await loadParticipantProjects();
     }
 
     viewPanel.scrollIntoView({
@@ -216,6 +218,117 @@ async function loadProjects() {
 
   renderProjectList();
 }
+
+
+// ------------------------------------
+// 参加者向け研究一覧の読み込み
+// ------------------------------------
+
+async function loadParticipantProjects() {
+  const list = $("participant-research-list");
+
+  list.textContent = "募集中の研究を読み込んでいます...";
+
+  if (!supabaseClient) {
+    list.textContent = "Supabaseに接続できていません。";
+    return;
+  }
+
+  const { data, error } = await supabaseClient
+    .from("research_projects")
+    .select("*")
+    .eq("status", "recruiting")
+    .is("deleted_at", null)
+    .order("created_at", { ascending: false });
+
+  if (error) {
+    console.error(error);
+    list.textContent =
+      "募集中の研究を読み込めませんでした：" + error.message;
+    return;
+  }
+
+  const today = new Date(
+    new Date().toLocaleString("en-US", {
+      timeZone: "Asia/Tokyo"
+    })
+  );
+
+  const todayString =
+    today.getFullYear() + "-" +
+    String(today.getMonth() + 1).padStart(2, "0") + "-" +
+    String(today.getDate()).padStart(2, "0");
+
+  const activeProjects = (data || []).filter((project) => {
+    return (
+      !project.recruitment_end ||
+      project.recruitment_end >= todayString
+    );
+  });
+
+  renderParticipantProjectList(activeProjects);
+}
+
+
+// ------------------------------------
+// 参加者向け研究一覧の表示
+// ------------------------------------
+
+function renderParticipantProjectList(projects) {
+  const list = $("participant-research-list");
+  list.replaceChildren();
+
+  if (projects.length === 0) {
+    const empty = document.createElement("p");
+    empty.className = "notice";
+    empty.textContent = "現在募集中の研究はありません。";
+    list.appendChild(empty);
+    return;
+  }
+
+  projects.forEach((project) => {
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "project-card";
+
+    const title = document.createElement("strong");
+    title.textContent = project.title;
+
+    const method = document.createElement("span");
+    method.className = "project-meta";
+    method.textContent =
+      project.recruitment_method === "appointment"
+        ? "日時予約方式"
+        : "外部フォーム方式";
+
+    const summary = document.createElement("span");
+    summary.className = "project-meta";
+    summary.textContent =
+      project.summary || "研究概要は未登録です。";
+
+    const target = document.createElement("span");
+    target.className = "project-meta";
+    target.textContent =
+      "参加対象：" + (project.target || "指定なし");
+
+    const duration = document.createElement("span");
+    duration.className = "project-meta";
+    duration.textContent =
+      "所要時間の目安：" +
+      (project.duration_estimate_minutes
+        ? project.duration_estimate_minutes + "分"
+        : "未設定");
+
+    card.append(title, method, summary, target, duration);
+
+    card.addEventListener("click", () => {
+      openParticipantResearchDetail(project);
+    });
+
+    list.appendChild(card);
+  });
+}
+
 
 // ------------------------------------
 // 研究一覧の表示
