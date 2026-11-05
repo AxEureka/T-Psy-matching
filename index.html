@@ -364,7 +364,59 @@
                     min="1"
                     placeholder="例：40"
                   >
-                </div>              
+                </div> 
+
+                
+                <!-- 基本定員 -->
+                <label for="appointment-default-capacity">
+                  1枠あたりの基本定員（人）
+                </label>
+                <input
+                  id="appointment-default-capacity"
+                  type="number"
+                  min="1"
+                  value="1"
+                  placeholder="例：2"
+                >
+                
+                <p class="small-note">
+                  生成されるすべての予約枠に、この定員が初期設定されます。
+                  個別の予約枠で変更することもできます。
+                </p>
+
+                
+                <!-- 実験場所 -->
+                <h4>実験場所</h4>
+                
+                <label for="appointment-location-type">
+                  場所の案内方法
+                </label>
+                
+                <select id="appointment-location-type">
+                  <option value="specified">場所を指定する</option>
+                  <option value="later">参加確定後に連絡する</option>
+                </select>
+                
+                <div id="appointment-location-input-area">
+                
+                  <label for="appointment-location">
+                    実験場所
+                  </label>
+                
+                  <input
+                    id="appointment-location"
+                    type="text"
+                    maxlength="300"
+                    placeholder="例：○○大学 ○号館 3階 実験室A"
+                  >
+                
+                </div>
+                
+                <p class="small-note">
+                  指定した場所、または参加確定後に連絡する旨が参加者に表示されます。
+                </p>
+
+
                 <p class="small-note">
                   設定した条件から予約候補を生成し、
                   公開する日時を選択できるようにします。
