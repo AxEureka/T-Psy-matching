@@ -411,6 +411,18 @@ $("research-form").addEventListener("submit", async (event) => {
       $("appointment-date-start").value || null,
     appointment_date_end:
       $("appointment-date-end").value || null,
+
+    // 実験場所
+    appointment_location_type:
+      $("appointment-location-type").value || "specified",
+    appointment_location:
+      $("appointment-location").value.trim() || null,
+    
+    // 日別の予約設定
+    appointment_days: appointmentDays,
+    
+    external_url: $("project-url").value.trim() || null,
+    updated_at: new Date().toISOString()
     
     external_url: $("project-url").value.trim() || null,
     updated_at: new Date().toISOString()
