@@ -1536,9 +1536,8 @@ $("generate-appointment-days-button").addEventListener("click", () => {
     while (cursor < endMinutes) {
       slots.push({
         startTime: minutesToTime(cursor),
-        capacity: 1
+        capacity: Number($("appointment-default-capacity").value) || 1
       });
-
       cursor += interval;
     }
 
@@ -1602,6 +1601,28 @@ $("save-appointment-day-button").addEventListener("click", () => {
     "この日の設定を一時保存しました。";
 
 });
+
+
+// ------------------------------------
+// 実験場所の入力欄切り替え
+// ------------------------------------
+
+function updateAppointmentLocationField() {
+  const type = $("appointment-location-type").value;
+
+  $("appointment-location-input-area").classList.toggle(
+    "hidden",
+    type === "later"
+  );
+}
+
+$("appointment-location-type").addEventListener(
+  "change",
+  updateAppointmentLocationField
+);
+
+updateAppointmentLocationField();
+
 
 // 初期表示
 updateCustomIntervalField();
