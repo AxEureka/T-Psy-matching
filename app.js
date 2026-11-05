@@ -1609,6 +1609,27 @@ $("generate-appointment-days-button").addEventListener("click", () => {
     return;
   }
 
+  const capacity =
+    Number($("appointment-default-capacity").value) || 1;
+
+  if (!Number.isInteger(capacity) || capacity < 1) {
+    alert("基本定員は1以上の整数を入力してください。");
+    return;
+  }
+
+  // 既存の日別設定がある場合は上書き確認
+  if (appointmentDays.length > 0) {
+    const confirmed = confirm(
+      "現在の日別設定を、変更後の基本設定で再生成します。\n\n" +
+      "これまでの日別設定（個別の時刻・定員・休み設定）は上書きされます。\n\n" +
+      "再生成してもよろしいですか？"
+    );
+
+    if (!confirmed) {
+      return;
+    }
+  }
+
   const startDate = new Date(startValue + "T12:00:00");
   const endDate = new Date(endValue + "T12:00:00");
 
@@ -1620,15 +1641,14 @@ $("generate-appointment-days-button").addEventListener("click", () => {
 
     const slots = [];
 
-    // 開始時刻を基準に予約枠を連続生成
-    // 終了時刻を超える場合も、最後の枠として生成する
     let cursor = startMinutes;
 
     while (cursor < endMinutes) {
       slots.push({
         startTime: minutesToTime(cursor),
-        capacity: Number($("appointment-default-capacity").value) || 1
+        capacity: capacity
       });
+
       cursor += interval;
     }
 
@@ -1647,52 +1667,10 @@ $("generate-appointment-days-button").addEventListener("click", () => {
 
   renderAppointmentDay();
 
-});
-
-
-// 前の日へ
-$("previous-appointment-day").addEventListener("click", () => {
-
-  saveCurrentAppointmentDayInput();
-
-  if (currentAppointmentDayIndex > 0) {
-    currentAppointmentDayIndex--;
-    renderAppointmentDay();
-  }
-
-});
-
-
-// 次の日へ
-$("next-appointment-day").addEventListener("click", () => {
-
-  saveCurrentAppointmentDayInput();
-
-  if (currentAppointmentDayIndex < appointmentDays.length - 1) {
-    currentAppointmentDayIndex++;
-    renderAppointmentDay();
-  }
-
-});
-
-
-// 実施しない日の切り替え
-$("appointment-day-off").addEventListener("change", () => {
-  saveCurrentAppointmentDayInput();
-  renderAppointmentDay();
-});
-
-
-// 日ごとの設定を一時保存
-$("save-appointment-day-button").addEventListener("click", () => {
-
-  saveCurrentAppointmentDayInput();
-
   $("appointment-day-message").textContent =
-    "この日の設定を一時保存しました。";
+    "新しい基本設定から日別設定を生成しました。";
 
 });
-
 
 // ------------------------------------
 // 実験場所の入力欄切り替え
