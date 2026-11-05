@@ -316,9 +316,20 @@ function getStatusLabel(status) {
 
 $("new-project-button").addEventListener("click", () => {
   editingProjectId = null;
+
+  // 日別設定を初期化
+  appointmentDays = [];
+  currentAppointmentDayIndex = 0;
+  $("appointment-day-editor").classList.add("hidden");
+  $("appointment-day-message").textContent = "";
+
   $("research-form").reset();
   $("research-form-message").textContent = "";
 
+  updateRecruitmentMethodFields();
+  updateCustomIntervalField();
+  updateAppointmentLocationField();
+  
   $("research-list-panel").classList.add("hidden");
   $("research-detail-panel").classList.add("hidden");
   $("research-form-panel").classList.remove("hidden");
@@ -1628,7 +1639,6 @@ $("generate-appointment-days-button").addEventListener("click", () => {
   
   if (!confirmed) {
     return;
-  }
   }
 
   const startDate = new Date(startValue + "T12:00:00");
