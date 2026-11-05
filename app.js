@@ -418,12 +418,9 @@ $("research-form").addEventListener("submit", async (event) => {
     appointment_location:
       $("appointment-location").value.trim() || null,
     
-    // 日別の予約設定
+        // 日別の予約設定
     appointment_days: appointmentDays,
-    
-    external_url: $("project-url").value.trim() || null,
-    updated_at: new Date().toISOString()
-    
+
     external_url: $("project-url").value.trim() || null,
     updated_at: new Date().toISOString()
   };
