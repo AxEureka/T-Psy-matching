@@ -418,8 +418,20 @@ $("research-form").addEventListener("submit", async (event) => {
     appointment_location:
       $("appointment-location").value.trim() || null,
     
-        // 日別の予約設定
+    // 日別の予約設定
     appointment_days: appointmentDays,
+
+    appointment_settings: {
+  start_time: $("appointment-time-start").value,
+  end_time: $("appointment-time-end").value,
+  interval_type: $("appointment-interval").value,
+  custom_interval: $("custom-interval").value
+    ? Number($("custom-interval").value)
+    : null,
+  default_capacity: Number(
+    $("appointment-default-capacity").value
+  ) || 1
+},
 
     external_url: $("project-url").value.trim() || null,
     updated_at: new Date().toISOString()
@@ -676,6 +688,39 @@ $("edit-project-button").addEventListener("click", () => {
     selectedProject.appointment_date_start || "";
   $("appointment-date-end").value =
     selectedProject.appointment_date_end || "";
+
+  // 基本の予約設定を復元
+  const appointmentSettings =
+    selectedProject.appointment_settings || {};
+  
+  if (appointmentSettings.start_time) {
+    $("appointment-time-start").value =
+      appointmentSettings.start_time;
+  }
+  
+  if (appointmentSettings.end_time) {
+    $("appointment-time-end").value =
+      appointmentSettings.end_time;
+  }
+  
+  if (appointmentSettings.interval_type) {
+    $("appointment-interval").value =
+      appointmentSettings.interval_type;
+  }
+  
+  if (appointmentSettings.custom_interval !== null &&
+      appointmentSettings.custom_interval !== undefined) {
+    $("custom-interval").value =
+      appointmentSettings.custom_interval;
+  }
+  
+  if (appointmentSettings.default_capacity !== undefined) {
+    $("appointment-default-capacity").value =
+      appointmentSettings.default_capacity;
+  }
+  
+  // カスタム設定欄の表示を更新
+  updateCustomIntervalField();
 
   // 実験場所を復元
   $("appointment-location-type").value =
